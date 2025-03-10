@@ -1,3 +1,5 @@
+```plaintext
+
 lib/
 ├── core/                     # Core utilities & configurations (unchanging logic)
 │   ├── network/
@@ -97,3 +99,6 @@ lib/
 │   │   │   ├── viewmodels/chat_viewmodel.dart
 │
 ├── main.dart                     # Entry point of the app
+
+```
+
