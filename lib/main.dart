@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:travel_app/presentation/pages/auth/login/login_page.dart';
+//import 'package:get_it/get_it.dart';
+import 'package:travel_app/features/auth/presentation/pages/login/login_page.dart';
 
-import 'data/datasources/auth_remote_datasource.dart';
-import 'data/repositories/auth_repository_impl.dart';
-import 'domain/usecases/login_use_case.dart';
+import 'core/di/di.dart';
+import 'features/auth/presentation/blocs/auth_bloc.dart';
+// import 'features/auth/data/datasources/auth_remote_datasource.dart';
+// import 'features/auth/data/repositories/auth_repository_impl.dart';
+// import 'features/auth/domain/usecases/login_use_case.dart';
+//import 'features/auth/domain/usecases/signup_usecase.dart';
+//import 'features/auth/presentation/blocs/auth_bloc.dart';
 
 void main() {
-  final authRemoteDatasource = AuthRemoteDatasource();
-  final authRepository = AuthRepositoryImpl(authRemoteDatasource);
-  final loginUseCase = LoginUseCase(authRepository);
-
+  setupDI();
   runApp(
-    RepositoryProvider(create: (_) => loginUseCase, child: const TravelApp()),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<LoginCubit>(create: (_) => getIt<LoginCubit>()),
+        BlocProvider<SignupCubit>(create: (_) => getIt<SignupCubit>()),
+      ],
+      child: const TravelApp(),
+    ),
+    //RepositoryProvider(create: (_) => signupUseCase, child: const TravelApp()),
   );
 }
 

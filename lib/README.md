@@ -1,78 +1,99 @@
-```plaintext
 lib/
-│── main.dart
+├── core/                     # Core utilities & configurations (unchanging logic)
+│   ├── network/
+│   │   ├── api_service.dart  # Handles API requests
+│   │   ├── dio_client.dart   # Uses Dio for networking
+│   │   ├── exceptions.dart   # Custom error handling
+│   ├── utils/
+│   │   ├── validators.dart   # Form validation utils (e.g., email, password)
+│   │   ├── constants.dart    # App-wide constants (e.g., API keys)
+│   │   ├── theme.dart        # Centralized theming
+│   │   ├── storage.dart      # SharedPreferences/local storage helpers
+│   ├── di/
+│   │   ├── dependency_injection.dart  # Manages services (GetIt)
+│   ├── routes/
+│   │   ├── auth_routes.dart   # Auth-specific routes (Login, Signup)
+│   │   ├── main_routes.dart   # Other routes (Home, Profile, Orders)
+│   │   ├── app_router.dart    # Centralized route configuration
 │
-├── core/                   # Contains shared utilities, constants, and configurations
-│   ├── constants/          # Application-wide constants
-│   │   ├── app_colors.dart
-│   │   ├── app_strings.dart
-│   │   ├── app_assets.dart
-│   │
-│   ├── utils/              # Helper functions, validation, extensions
-│   │   ├── validators.dart
-│   │   ├── helpers.dart
-│   │   ├── extensions.dart
+├── features/                   # Organized by feature
+│   ├── auth/                    # Authentication Module (Login, Signup)
+│   │   ├── data/
+│   │   │   ├── datasources/
+│   │   │   │   ├── auth_remote_datasource.dart
+│   │   │   ├── models/
+│   │   │   │   ├── user_models.dart
+│   │   │   ├── repositories/
+│   │   │   │   ├── auth_repository_impl.dart  # Handles signup/login API calls
+│   │   ├── domain/
+│   │   │   ├── entities/
+│   │   │   │   ├── user.dart
+│   │   │   ├── repositories/
+│   │   │   │   ├── auth_repository.dart
+│   │   │   ├── usecases/
+│   │   │   │   ├── login_usecase.dart
+│   │   │   │   ├── signup_usecase.dart
+│   │   ├── presentation/
+│   │   │   ├── pages/
+│   │   │   │   ├── login_page.dart
+│   │   │   │   ├── signup_page.dart
+│   │   │   ├── blocs/
+│   │   │   │   ├── login_blocs.dart
+│   │   │   ├── widgets/
+│   │   │   │   ├── signup_form.dart
+│   │   │   │   ├── login_form.dart
+│   │   │   │   ├── signup_form.dart
+│   │   │   │   ├── text_field.dart
+│   │   │   │   ├── text_from.dart
+│   │   │   ├── viewmodels/
+│   │   │   │   ├── login_viewmodel.dart
+│   │   │   │   ├── signup_viewmodel.dart
 │
-├── data/                   # Data sources and repositories (Interacts with APIs, DB)
-│   ├── models/             # Data models (DTOs)
-│   │   ├── user_model.dart
-│   │   ├── trip_model.dart
-│   │
-│   ├── repositories/       # Data repositories (Implements domain layer interfaces)
-│   │   ├── auth_repository_impl.dart
-│   │   ├── trip_repository_impl.dart
-│   │
-│   ├── sources/            # Remote & Local data sources
-│   │   ├── remote/         # API calls
-│   │   │   ├── auth_api.dart
-│   │   │   ├── trip_api.dart
-│   │   │
-│   │   ├── local/          # Local storage (SharedPrefs, SQLite, Hive)
-│   │   │   ├── auth_local.dart
-│   │   │   ├── database_helper.dart
+│   ├── profile/                 # User Profile Module
+│   │   ├── data/
+│   │   │   ├── models/profile_model.dart
+│   │   │   ├── repositories/profile_repository.dart
+│   │   ├── domain/
+│   │   │   ├── usecases/get_user_profile.dart
+│   │   │   ├── usecases/update_user_profile.dart
+│   │   ├── presentation/
+│   │   │   ├── pages/profile_page.dart
+│   │   │   ├── widgets/profile_picture.dart
+│   │   │   ├── viewmodels/profile_viewmodel.dart
 │
-├── domain/                 # Business logic layer (Entities, Use Cases, Interfaces)
-│   ├── entities/           # Core business objects
-│   │   ├── user.dart
-│   │   ├── trip.dart
-│   │
-│   ├── repositories/       # Abstract classes (Contracts for repositories)
-│   │   ├── auth_repository.dart
-│   │   ├── trip_repository.dart
-│   │
-│   ├── usecases/           # Application-specific logic
-│   │   ├── login_user.dart
-│   │   ├── get_trips.dart
+│   ├── orders/                   # Orders Module (for future eCommerce features)
+│   │   ├── data/
+│   │   │   ├── models/order_model.dart
+│   │   │   ├── repositories/order_repository.dart
+│   │   ├── domain/
+│   │   │   ├── usecases/get_orders.dart
+│   │   │   ├── usecases/cancel_order.dart
+│   │   ├── presentation/
+│   │   │   ├── pages/orders_page.dart
+│   │   │   ├── widgets/order_card.dart
+│   │   │   ├── viewmodels/orders_viewmodel.dart
 │
-├── presentations/          # UI Layer (Widgets, Screens, ViewModels)
-│   ├── viewmodels/         # Manages UI state
-│   │   ├── login_view_model.dart
-│   │   ├── trip_view_model.dart
-│   │
-│   ├── screens/            # UI screens
-│   │   ├── auth/           # Authentication screens
-│   │   │   ├── login_page.dart
-│   │   │   ├── register_page.dart
-│   │   │
-│   │   ├── home/           # Main app screens
-│   │   │   ├── home_page.dart
-│   │   │   ├── trip_details_page.dart
-│   │   │
-│   │   ├── profile/        # User profile
-│   │       ├── profile_page.dart
-│   │       ├── edit_profile_page.dart
-│   │
-│   ├── widgets/            # Reusable UI components
-│       ├── custom_button.dart
-│       ├── custom_textfield.dart
-│       ├── password_field.dart
+│   ├── notifications/            # Notifications Module
+│   │   ├── data/
+│   │   │   ├── models/notification_model.dart
+│   │   │   ├── repositories/notification_repository.dart
+│   │   ├── domain/
+│   │   │   ├── usecases/get_notifications.dart
+│   │   ├── presentation/
+│   │   │   ├── pages/notifications_page.dart
+│   │   │   ├── widgets/notification_item.dart
+│   │   │   ├── viewmodels/notification_viewmodel.dart
 │
-├── services/               # External services (Firebase, Notifications, etc.)
-│   ├── auth_service.dart   # Handles authentication
-│   ├── database_service.dart # Local database handling
-│   ├── location_service.dart # Handles GPS & Maps
+│   ├── chat/                     # Chat Module (for future chat support)
+│   │   ├── data/
+│   │   │   ├── models/chat_message_model.dart
+│   │   │   ├── repositories/chat_repository.dart
+│   │   ├── domain/
+│   │   │   ├── usecases/send_message.dart
+│   │   │   ├── usecases/get_messages.dart
+│   │   ├── presentation/
+│   │   │   ├── pages/chat_page.dart
+│   │   │   ├── widgets/chat_bubble.dart
+│   │   │   ├── viewmodels/chat_viewmodel.dart
 │
-├── config/                 # App-level configurations (Optional)
-│   ├── routes.dart         # Manages app navigation
-│   ├── theme.dart          # Defines global theme
-```
+├── main.dart                     # Entry point of the app
