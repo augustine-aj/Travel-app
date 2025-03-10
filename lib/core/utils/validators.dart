@@ -14,7 +14,7 @@ class Validators {
   }
 
   static String isValidPassword(String password) {
-    if (password == null || password.isEmpty) {
+    if (password.isEmpty) {
       return 'Password cannot be empty';
     }
     if (password.length < 8) {
