@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_app/core/utils/constants.dart';
 import 'package:travel_app/features/auth/presentation/widgets/text_form_field.dart';
 
+import '../../../../core/utils/validators.dart';
 import '../blocs/auth_bloc.dart';
+import '../blocs/signup_bloc.dart';
+import '../blocs/signup_event.dart';
 import '../viewmodels/signup_viewmodel.dart';
 
 class SignupForm extends StatelessWidget {
-  final SignupViewModel viewModel;
-  final AuthState state;
-  SignupForm({super.key, required this.viewModel, required this.state});
+  //final SignupViewModel viewModel;
+  //final AuthState state;
+  //SignupForm({super.key, required this.viewModel, required this.state});
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
-
+  final _formKey = GlobalKey<FormState>();
   passwordVisibilityButton(bool visibility) {
     return IconButton(
       icon: Icon(visibility ? Icons.visibility : Icons.visibility_off),
@@ -43,36 +47,64 @@ class SignupForm extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.all(15),
             child: Form(
+              key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   buildTextFormField(
-                    controller: viewModel.usernameTextController,
-                    label: 'Name',
+                    //controller: viewModel.usernameTextController,
+                    label: 'Username',
+                    onChanged: (value) {
+                      //print('Starts..');
+                      BlocProvider.of<SignupBloc>(
+                        context,
+                      ).add(OnUsernameChanged(value));
+                    },
                     prefixIcon: Icon(Icons.person),
+                    validator:
+                        (value) =>
+                            Validators.isValidUsername(value!)
+                                ? null
+                                : 'Invalid Username',
                   ),
                   kheight,
                   buildTextFormField(
-                    controller: viewModel.emailTextController,
+                    //: viewModel.emailTextController,
                     label: 'Email',
                     prefixIcon: Icon(Icons.email),
-                    validator: emailValidator,
-                    autoValidateMode: AutovalidateMode.onUserInteraction,
+                    onChanged: (value) {
+                      BlocProvider.of<SignupBloc>(
+                        context,
+                      ).add(OnEmailChanged(value));
+                    },
+                    validator:
+                        (value) =>
+                            Validators.isValidEmail(value!)
+                                ? null
+                                : 'Invalid Email',
+                    //autoValidateMode: AutovalidateMode.onUserInteraction,
                   ),
                   kheight,
                   buildTextFormField(
-                    controller: viewModel.passwordTextController,
+                    //controller: viewModel.passwordTextController,
                     label: 'Password',
                     prefixIcon: Icon(Icons.lock),
+                    onChanged: (value) {
+                      BlocProvider.of<SignupBloc>(
+                        context,
+                      ).add(OnPasswordChanged(value));
+                    },
                     suffixIcon: passwordVisibilityButton(_isPasswordVisible),
                     obscureText: !_isPasswordVisible,
-                    validator: passwordValidator,
+                    //validator: null,
                     autoValidateMode: AutovalidateMode.onUserInteraction,
                   ),
                   kheight,
                   buildTextFormField(
                     label: 'Confirm password',
                     prefixIcon: Icon(Icons.lock),
+
+                    //onChanged:(value){BlocProvider.of(context).add(OnConfirmPasswordChanged(password: , confirmPassword:))}
                     suffixIcon: confirmPasswordVisibilityButton(
                       _isConfirmPasswordVisible,
                     ),

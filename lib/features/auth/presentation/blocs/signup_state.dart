@@ -4,7 +4,7 @@ class SignupState {
   final String? errorMessage;
   final bool isUsernameValid;
   final bool isEmailValid;
-  final bool isPasswordValid;
+  final String? isPasswordValid;
   final bool isConfirmPasswordValid;
   SignupState({
     this.isLoading = false,
@@ -12,7 +12,7 @@ class SignupState {
     this.errorMessage,
     this.isUsernameValid = false,
     this.isEmailValid = false,
-    this.isPasswordValid = false,
+    this.isPasswordValid,
     this.isConfirmPasswordValid = false,
   });
   SignupState copyWith({
@@ -21,7 +21,7 @@ class SignupState {
     String? errorMessage,
     bool? isUsernameValid,
     bool? isEmailValid,
-    bool? isPasswordValid,
+    String? isPasswordValid,
     bool? isConfirmPasswordValid,
   }) {
     return SignupState(

@@ -6,6 +6,7 @@ Widget buildTextFormField({
   bool obscureText = false,
   IconButton? suffixIcon,
   Icon? prefixIcon,
+  Function(String)? onChanged,
   BorderSide borderSide = const BorderSide(color: Colors.blue, width: 2),
   Color fontColor = Colors.black,
   FontWeight fontWeight = FontWeight.normal,
@@ -23,6 +24,7 @@ Widget buildTextFormField({
       labelText: label,
       labelStyle: TextStyle(color: fontColor, fontWeight: fontWeight),
     ),
+    onChanged: onChanged,
     validator: validator,
     autovalidateMode: autoValidateMode,
   );

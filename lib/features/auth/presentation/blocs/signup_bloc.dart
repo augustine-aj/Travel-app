@@ -31,11 +31,42 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
       state.copyWith(
         isPasswordValid: Validators.isValidPassword(event.password),
       ),
-
-      //------------>>>>>RestartFromHereReturnsStringProblem
     );
   }
 
-  void _onConfirmPasswordChanged() {}
-  void _onSignupSubmitted() {}
+  void _onConfirmPasswordChanged(
+    OnConfirmPasswordChanged event,
+    Emitter<SignupState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        isConfirmPasswordValid: Validators.isPasswordMatch(
+          event.password,
+          event.confirmPassword,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _onSignupSubmitted(
+    OnSignupSubmitted event,
+    Emitter<SignupState> emit,
+  ) async {
+    if (!state.isUsernameValid ||
+        !state.isEmailValid ||
+        state.isConfirmPasswordValid && state.isPasswordValid == null) {
+      emit(state.copyWith(errorMessage: 'Invalid user inputs!'));
+    }
+    emit(state.copyWith(isLoading: true));
+    final result = await signupUseCase.execute(
+      event.username,
+      event.email,
+      event.password,
+    );
+    if (result != null) {
+      emit(state.copyWith(isLoading: false, isSuccess: true));
+    } else {
+      emit(state.copyWith(isLoading: false, errorMessage: 'Unknown error!'));
+    }
+  }
 }

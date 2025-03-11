@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:travel_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:travel_app/features/auth/domain/usecases/login_use_case.dart';
 import 'package:travel_app/features/auth/domain/usecases/signup_usecase.dart';
+import 'package:travel_app/features/auth/presentation/blocs/signup_bloc.dart';
 
 import '../../features/auth/data/datasources/auth_remote_datasource.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
@@ -31,7 +32,7 @@ void setupDI() {
     () => LoginCubit(getIt<LoginUseCase>()),
   );
 
-  getIt.registerLazySingleton<SignupCubit>(
-    () => SignupCubit(getIt<SignupUseCase>()),
+  getIt.registerLazySingleton<SignupBloc>(
+    () => SignupBloc(getIt<SignupUseCase>()),
   );
 }

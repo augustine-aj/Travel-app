@@ -16,8 +16,12 @@ class OnPasswordChanged extends SignupEvent {
 }
 
 class OnConfirmPasswordChanged extends SignupEvent {
+  final String password;
   final String confirmPassword;
-  OnConfirmPasswordChanged(this.confirmPassword);
+  OnConfirmPasswordChanged({
+    required this.password,
+    required this.confirmPassword,
+  });
 }
 
 class OnSignupSubmitted extends SignupEvent {
