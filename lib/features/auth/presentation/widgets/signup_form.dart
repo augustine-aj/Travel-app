@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_app/core/utils/constants.dart';
+import 'package:travel_app/features/auth/presentation/blocs/signup_state.dart';
 import 'package:travel_app/features/auth/presentation/widgets/text_form_field.dart';
 
 import '../../../../core/utils/validators.dart';
@@ -66,7 +67,10 @@ class SignupForm extends StatelessWidget {
                             Validators.isValidUsername(value!)
                                 ? null
                                 : 'Invalid Username',
+
+                    autoValidateMode: AutovalidateMode.onUserInteraction,
                   ),
+
                   kheight,
                   buildTextFormField(
                     //: viewModel.emailTextController,
@@ -82,7 +86,7 @@ class SignupForm extends StatelessWidget {
                             Validators.isValidEmail(value!)
                                 ? null
                                 : 'Invalid Email',
-                    //autoValidateMode: AutovalidateMode.onUserInteraction,
+                    autoValidateMode: AutovalidateMode.onUserInteraction,
                   ),
                   kheight,
                   buildTextFormField(
@@ -96,7 +100,7 @@ class SignupForm extends StatelessWidget {
                     },
                     suffixIcon: passwordVisibilityButton(_isPasswordVisible),
                     obscureText: !_isPasswordVisible,
-                    //validator: null,
+                    validator: (value) => Validators.isValidPassword(value!),
                     autoValidateMode: AutovalidateMode.onUserInteraction,
                   ),
                   kheight,
@@ -104,7 +108,16 @@ class SignupForm extends StatelessWidget {
                     label: 'Confirm password',
                     prefixIcon: Icon(Icons.lock),
 
-                    //onChanged:(value){BlocProvider.of(context).add(OnConfirmPasswordChanged(password: , confirmPassword:))}
+                    onChanged: (value) {
+                      final password =
+                          BlocProvider.of<SignupBloc>(context).state.password;
+                      BlocProvider.of<SignupBloc>(context).add(
+                        OnConfirmPasswordChanged(
+                          password: password,
+                          confirmPassword: value,
+                        ),
+                      );
+                    },
                     suffixIcon: confirmPasswordVisibilityButton(
                       _isConfirmPasswordVisible,
                     ),

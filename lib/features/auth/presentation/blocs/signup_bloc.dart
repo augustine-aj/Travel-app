@@ -14,6 +14,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     on<OnConfirmPasswordChanged>(_onConfirmPasswordChanged);
     on<OnSignupSubmitted>(_onSignupSubmitted);
   }
+
   void _onUsernameChanged(OnUsernameChanged event, Emitter<SignupState> emit) {
     emit(
       state.copyWith(

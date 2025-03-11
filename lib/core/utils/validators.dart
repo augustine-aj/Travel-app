@@ -13,7 +13,7 @@ class Validators {
     return regex.hasMatch(email);
   }
 
-  static String isValidPassword(String password) {
+  static String? isValidPassword(String password) {
     if (password.isEmpty) {
       return 'Password cannot be empty';
     }
@@ -32,7 +32,7 @@ class Validators {
     if (!RegExp(r'^(?=.*[@$!%*?&])').hasMatch(password)) {
       return 'Must contain at least one special character (@, \$, !, %, *, ?, &)';
     }
-    return 'Invalid password';
+    return null;
     //return regex.hasMatch(password);
   }
 
