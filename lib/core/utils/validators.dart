@@ -36,7 +36,11 @@ class Validators {
     //return regex.hasMatch(password);
   }
 
-  static bool isPasswordMatch(String password, String confirmPassword) {
-    return password == confirmPassword;
+  static String? isPasswordMatch(String password, String? confirmPassword) {
+    if (confirmPassword == null || confirmPassword.isEmpty) {
+      return 'Confirmpassword is required';
+    }
+    if (password != confirmPassword) return 'Password do not match';
+    return null;
   }
 }

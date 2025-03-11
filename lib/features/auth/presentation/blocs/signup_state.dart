@@ -5,7 +5,9 @@ class SignupState {
   final bool isUsernameValid;
   final bool isEmailValid;
   final String? isPasswordValid;
-  final bool isConfirmPasswordValid;
+  final String? isConfirmPasswordValid;
+  final bool isPasswordVisible;
+  final bool isConfirmPasswordVisible;
   SignupState({
     this.isLoading = false,
     this.isSuccess = false,
@@ -13,7 +15,9 @@ class SignupState {
     this.isUsernameValid = false,
     this.isEmailValid = false,
     this.isPasswordValid,
-    this.isConfirmPasswordValid = false,
+    this.isConfirmPasswordValid,
+    this.isPasswordVisible = false,
+    this.isConfirmPasswordVisible = false,
   });
   SignupState copyWith({
     bool? isLoading,
@@ -22,7 +26,9 @@ class SignupState {
     bool? isUsernameValid,
     bool? isEmailValid,
     String? isPasswordValid,
-    bool? isConfirmPasswordValid,
+    String? isConfirmPasswordValid,
+    bool? isPasswordVisible,
+    bool? isConfirmPasswordVisible,
   }) {
     return SignupState(
       isLoading: isLoading ?? this.isLoading,
@@ -33,6 +39,9 @@ class SignupState {
       isPasswordValid: isPasswordValid ?? this.isPasswordValid,
       isConfirmPasswordValid:
           isConfirmPasswordValid ?? this.isConfirmPasswordValid,
+      isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
+      isConfirmPasswordVisible:
+          isConfirmPasswordVisible ?? this.isConfirmPasswordVisible,
     );
   }
 }

@@ -1,5 +1,9 @@
 abstract class SignupEvent {}
 
+class TogglePasswordVisibility extends SignupEvent {}
+
+class ToggleConfirmPasswordVisibility extends SignupEvent {}
+
 class OnUsernameChanged extends SignupEvent {
   final String username;
   OnUsernameChanged(this.username);

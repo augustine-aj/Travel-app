@@ -13,6 +13,8 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     on<OnPasswordChanged>(_onPasswordChanged);
     on<OnConfirmPasswordChanged>(_onConfirmPasswordChanged);
     on<OnSignupSubmitted>(_onSignupSubmitted);
+    on<TogglePasswordVisibility>(_onPasswordVisbilityChanged);
+    on<ToggleConfirmPasswordVisibility>(_onConfirmPasswordVisibility);
   }
 
   void _onUsernameChanged(OnUsernameChanged event, Emitter<SignupState> emit) {
@@ -35,6 +37,14 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     );
   }
 
+  void _onPasswordVisbilityChanged(
+    TogglePasswordVisibility event,
+    Emitter<SignupState> emit,
+  ) {
+    print(state.isPasswordVisible);
+    emit(state.copyWith(isPasswordVisible: !state.isPasswordVisible));
+  }
+
   void _onConfirmPasswordChanged(
     OnConfirmPasswordChanged event,
     Emitter<SignupState> emit,
@@ -49,13 +59,21 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     );
   }
 
+  void _onConfirmPasswordVisibility(
+    ToggleConfirmPasswordVisibility event,
+    Emitter<SignupState> emit,
+  ) => emit(
+    state.copyWith(isConfirmPasswordVisible: !state.isConfirmPasswordVisible),
+  );
+
   Future<void> _onSignupSubmitted(
     OnSignupSubmitted event,
     Emitter<SignupState> emit,
   ) async {
     if (!state.isUsernameValid ||
         !state.isEmailValid ||
-        state.isConfirmPasswordValid && state.isPasswordValid == null) {
+        state.isPasswordValid != null ||
+        state.isConfirmPasswordValid != null) {
       emit(state.copyWith(errorMessage: 'Invalid user inputs!'));
     }
     emit(state.copyWith(isLoading: true));

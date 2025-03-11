@@ -5,38 +5,40 @@ import 'package:travel_app/features/auth/presentation/blocs/signup_state.dart';
 import 'package:travel_app/features/auth/presentation/widgets/text_form_field.dart';
 
 import '../../../../core/utils/validators.dart';
-import '../blocs/auth_bloc.dart';
 import '../blocs/signup_bloc.dart';
 import '../blocs/signup_event.dart';
-import '../viewmodels/signup_viewmodel.dart';
 
 class SignupForm extends StatelessWidget {
   //final SignupViewModel viewModel;
   //final AuthState state;
   //SignupForm({super.key, required this.viewModel, required this.state});
-  bool _isPasswordVisible = false;
-  bool _isConfirmPasswordVisible = false;
+  //bool _isPasswordVisible = false;
+  //bool _isConfirmPasswordVisible = false;
   final _formKey = GlobalKey<FormState>();
-  passwordVisibilityButton(bool visibility) {
-    return IconButton(
-      icon: Icon(visibility ? Icons.visibility : Icons.visibility_off),
-      onPressed: () {
-        _isPasswordVisible = !visibility;
-      },
-    );
-  }
 
-  confirmPasswordVisibilityButton(bool visibility) {
-    return IconButton(
-      icon: Icon(visibility ? Icons.visibility : Icons.visibility_off),
-      onPressed: () {
-        _isConfirmPasswordVisible = !visibility;
-      },
-    );
-  }
+  SignupForm({super.key});
+  // passwordVisibilityButton(bool visibility) {
+  //   return IconButton(
+  //     icon: Icon(visibility ? Icons.visibility : Icons.visibility_off),
+  //     onPressed: () {
+  //       _isPasswordVisible = !visibility;
+  //     },
+  //   );
+  // }
+
+  // confirmPasswordVisibilityButton(bool visibility) {
+  //   return IconButton(
+  //     icon: Icon(visibility ? Icons.visibility : Icons.visibility_off),
+  //     onPressed: () {
+  //       _isConfirmPasswordVisible = !visibility;
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
+    String password = '';
+    String confirmPassword = '';
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(30.0),
@@ -89,41 +91,85 @@ class SignupForm extends StatelessWidget {
                     autoValidateMode: AutovalidateMode.onUserInteraction,
                   ),
                   kheight,
-                  buildTextFormField(
-                    //controller: viewModel.passwordTextController,
-                    label: 'Password',
-                    prefixIcon: Icon(Icons.lock),
-                    onChanged: (value) {
-                      BlocProvider.of<SignupBloc>(
-                        context,
-                      ).add(OnPasswordChanged(value));
-                    },
-                    suffixIcon: passwordVisibilityButton(_isPasswordVisible),
-                    obscureText: !_isPasswordVisible,
-                    validator: (value) => Validators.isValidPassword(value!),
-                    autoValidateMode: AutovalidateMode.onUserInteraction,
-                  ),
-                  kheight,
-                  buildTextFormField(
-                    label: 'Confirm password',
-                    prefixIcon: Icon(Icons.lock),
-
-                    onChanged: (value) {
-                      final password =
-                          BlocProvider.of<SignupBloc>(context).state.password;
-                      BlocProvider.of<SignupBloc>(context).add(
-                        OnConfirmPasswordChanged(
-                          password: password,
-                          confirmPassword: value,
+                  BlocBuilder<SignupBloc, SignupState>(
+                    builder: (context, state) {
+                      bool isPasswordValid =
+                          Validators.isValidPassword(password) == null;
+                      return buildTextFormField(
+                        //controller: viewModel.passwordTextController,
+                        label: 'Password',
+                        prefixIcon: Icon(
+                          Icons.lock,
+                          color: isPasswordValid ? Colors.green : null,
                         ),
+                        onChanged: (value) {
+                          password = value;
+                          BlocProvider.of<SignupBloc>(
+                            context,
+                          ).add(OnPasswordChanged(value));
+                        },
+                        suffixIcon: IconButton(
+                          onPressed:
+                              () => context.read<SignupBloc>().add(
+                                TogglePasswordVisibility(),
+                              ),
+                          icon: Icon(
+                            BlocProvider.of<SignupBloc>(
+                                  context,
+                                ).state.isPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                        ),
+                        obscureText: !state.isPasswordVisible,
+                        validator:
+                            (value) => Validators.isValidPassword(value!),
+                        autoValidateMode: AutovalidateMode.onUserInteraction,
                       );
                     },
-                    suffixIcon: confirmPasswordVisibilityButton(
-                      _isConfirmPasswordVisible,
-                    ),
-                    obscureText: !_isConfirmPasswordVisible,
-                    //validator: (value) => confirmPasswordValidator(value),
-                    autoValidateMode: AutovalidateMode.onUserInteraction,
+                  ),
+                  kheight,
+                  BlocBuilder<SignupBloc, SignupState>(
+                    builder: (context, state) {
+                      final isPasswordMatched =
+                          Validators.isPasswordMatch(
+                            password,
+                            confirmPassword,
+                          ) ==
+                          null;
+                      return buildTextFormField(
+                        label: 'Confirm password',
+                        prefixIcon: Icon(
+                          Icons.lock,
+                          color: isPasswordMatched ? Colors.green : null,
+                        ),
+                        onChanged: (value) {
+                          confirmPassword = value;
+                          BlocProvider.of<SignupBloc>(context).add(
+                            OnConfirmPasswordChanged(
+                              password: password,
+                              confirmPassword: confirmPassword,
+                            ),
+                          );
+                        },
+                        suffixIcon: IconButton(
+                          onPressed:
+                              () => context.read<SignupBloc>().add(
+                                ToggleConfirmPasswordVisibility(),
+                              ),
+                          icon: Icon(
+                            state.isConfirmPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                        ),
+                        obscureText: !state.isConfirmPasswordVisible,
+                        validator:
+                            (value) =>
+                                Validators.isPasswordMatch(password, value!),
+                        autoValidateMode: AutovalidateMode.onUserInteraction,
+                      );
+                    },
                   ),
                   kheight,
                   _buildSignUpButton(),
@@ -159,47 +205,4 @@ Widget _buildFooter() {
       TextButton(onPressed: () {}, child: Text('Login')),
     ],
   );
-}
-
-String? emailValidator(String? value) {
-  if (value == null || value.isEmpty) {
-    return 'Enter a valid email';
-  }
-  return !RegExp(
-        r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
-      ).hasMatch(value)
-      ? 'Enter a valid email'
-      : null;
-}
-
-// String? passwordValidator(String? value) {
-//   // if (value == null || value.isEmpty) {
-//   //   return 'Password cannot be empty';
-//   // }
-//   // if (value.length < 8) {
-//   //   return 'Password must be at least 8 characters long';
-//   // }
-//   // if (!RegExp(r'^(?=.*[a-z])').hasMatch(value)) {
-//   //   return 'Must contain at least one lowercase letter';
-//   // }
-//   // if (!RegExp(r'^(?=.*[A-Z])').hasMatch(value)) {
-//   //   return 'Must contain at least one uppercase letter';
-//   // }
-//   // if (!RegExp(r'^(?=.*\d)').hasMatch(value)) {
-//   //   return 'Must contain at least one digit';
-//   // }
-//   // if (!RegExp(r'^(?=.*[@$!%*?&])').hasMatch(value)) {
-//   //   return 'Must contain at least one special character (@, \$, !, %, *, ?, &)';
-//   // }
-//   // return null;
-// }
-
-String? confirmPasswordValidator(String? value, String password) {
-  if (value == null || value.isEmpty) {
-    return 'Confirm password cannot be empty';
-  }
-  if (value != password) {
-    return 'Passwords do not match';
-  }
-  return null; // ✅ Passwords match
 }
