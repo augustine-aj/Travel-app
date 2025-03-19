@@ -14,8 +14,8 @@ class SignupForm extends StatelessWidget {
   SignupForm({super.key});
   @override
   Widget build(BuildContext context) {
-    //String password = '';
-    //String confirmPassword = '';
+    String password = '';
+    String confirmPassword = '';
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(30.0),
@@ -34,9 +34,56 @@ class SignupForm extends StatelessWidget {
                   kheight,
                   _buildEmailField(context),
                   kheight,
-                  _buildPasswordField(context),
+                  _buildPasswordField(context, password),
                   kheight,
-                  _buildConfirmPasswordField(context),
+
+                  // //_buildConfirmPasswordField(
+                  //   context,
+                  //   password,
+                  //   confirmPassword,
+                  // ),
+                  BlocBuilder<SignupBloc, SignupState>(
+                    builder: (context, state) {
+                      final isPasswordMatched =
+                          Validators.isPasswordMatch(
+                            password,
+                            confirmPassword,
+                          ) ==
+                          null;
+                      return buildTextFormField(
+                        label: 'Confirm password',
+                        prefixIcon: Icon(
+                          Icons.lock,
+                          color: isPasswordMatched ? Colors.green : null,
+                        ),
+                        onChanged: (value) {
+                          confirmPassword = value;
+                          BlocProvider.of<SignupBloc>(context).add(
+                            OnConfirmPasswordChanged(
+                              password: password,
+                              confirmPassword: confirmPassword,
+                            ),
+                          );
+                        },
+                        suffixIcon: IconButton(
+                          onPressed:
+                              () => context.read<SignupBloc>().add(
+                                ToggleConfirmPasswordVisibility(),
+                              ),
+                          icon: Icon(
+                            state.isConfirmPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                        ),
+                        obscureText: !state.isConfirmPasswordVisible,
+                        validator:
+                            (value) =>
+                                Validators.isPasswordMatch(password, value!),
+                        autoValidateMode: AutovalidateMode.onUserInteraction,
+                      );
+                    },
+                  ),
                   kheight,
                   _buildSignUpButton(),
                   kheight,
@@ -79,10 +126,10 @@ _buildEmailField(context) {
   );
 }
 
-Widget _buildPasswordField(BuildContext contex) {
+Widget _buildPasswordField(context, password) {
   return BlocBuilder<SignupBloc, SignupState>(
     builder: (context, state) {
-      bool isPasswordValid = Validators.isValidPassword(state.password) == null;
+      bool isPasswordValid = Validators.isValidPassword(password) == null;
       return buildTextFormField(
         label: 'Password',
         prefixIcon: Icon(
@@ -90,7 +137,7 @@ Widget _buildPasswordField(BuildContext contex) {
           color: isPasswordValid ? Colors.green : null,
         ),
         onChanged: (value) {
-          //password = value;
+          password = value;
           BlocProvider.of<SignupBloc>(context).add(OnPasswordChanged(value));
         },
         suffixIcon: IconButton(
@@ -110,45 +157,8 @@ Widget _buildPasswordField(BuildContext contex) {
   );
 }
 
-Widget _buildConfirmPasswordField(context) {
-  return BlocBuilder<SignupBloc, SignupState>(
-    builder: (context, state) {
-      final isPasswordMatched =
-          Validators.isPasswordMatch(state.password, state.confirmPassword) ==
-          null;
-      return buildTextFormField(
-        label: 'Confirm password',
-        prefixIcon: Icon(
-          Icons.lock,
-          color: isPasswordMatched ? Colors.green : null,
-        ),
-        onChanged: (value) {
-          BlocProvider.of<SignupBloc>(context).add(
-            OnConfirmPasswordChanged(
-              password: state.password,
-              confirmPassword: value,
-            ),
-          );
-        },
-        suffixIcon: IconButton(
-          onPressed:
-              () => context.read<SignupBloc>().add(
-                ToggleConfirmPasswordVisibility(),
-              ),
-          icon: Icon(
-            state.isConfirmPasswordVisible
-                ? Icons.visibility
-                : Icons.visibility_off,
-          ),
-        ),
-        obscureText: !state.isConfirmPasswordVisible,
-        validator:
-            (value) => Validators.isPasswordMatch(state.password, value!),
-        autoValidateMode: AutovalidateMode.onUserInteraction,
-      );
-    },
-  );
-}
+// Widget _buildConfirmPasswordField(context, password, confirmPassword) {
+//   return
 
 Widget _buildSignUpButton() {
   return ElevatedButton(

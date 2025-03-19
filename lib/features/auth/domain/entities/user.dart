@@ -1,4 +1,4 @@
 class User {
-  final String email;
+  final String? email;
   User(this.email);
 }

@@ -32,6 +32,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   void _onPasswordChanged(OnPasswordChanged event, Emitter<SignupState> emit) {
     emit(
       state.copyWith(
+        password: event.password,
         isPasswordValid: Validators.isValidPassword(event.password),
       ),
     );
@@ -41,7 +42,6 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     TogglePasswordVisibility event,
     Emitter<SignupState> emit,
   ) {
-    print(state.isPasswordVisible);
     emit(state.copyWith(isPasswordVisible: !state.isPasswordVisible));
   }
 
@@ -51,6 +51,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   ) {
     emit(
       state.copyWith(
+        confirmPassword: event.confirmPassword,
         isConfirmPasswordValid: Validators.isPasswordMatch(
           event.password,
           event.confirmPassword,

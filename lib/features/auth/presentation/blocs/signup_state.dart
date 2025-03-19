@@ -4,7 +4,9 @@ class SignupState {
   final String? errorMessage;
   final bool isUsernameValid;
   final bool isEmailValid;
+  final String password;
   final String? isPasswordValid;
+  final String confirmPassword;
   final String? isConfirmPasswordValid;
   final bool isPasswordVisible;
   final bool isConfirmPasswordVisible;
@@ -14,7 +16,9 @@ class SignupState {
     this.errorMessage,
     this.isUsernameValid = false,
     this.isEmailValid = false,
+    this.password = '',
     this.isPasswordValid,
+    this.confirmPassword='',
     this.isConfirmPasswordValid,
     this.isPasswordVisible = false,
     this.isConfirmPasswordVisible = false,
@@ -25,7 +29,9 @@ class SignupState {
     String? errorMessage,
     bool? isUsernameValid,
     bool? isEmailValid,
+    String? password,
     String? isPasswordValid,
+    String? confirmPassword,
     String? isConfirmPasswordValid,
     bool? isPasswordVisible,
     bool? isConfirmPasswordVisible,
@@ -36,7 +42,9 @@ class SignupState {
       errorMessage: errorMessage,
       isUsernameValid: isUsernameValid ?? this.isUsernameValid,
       isEmailValid: isEmailValid ?? this.isEmailValid,
+      password: password ?? this.password,
       isPasswordValid: isPasswordValid ?? this.isPasswordValid,
+      confirmPassword: confirmPassword ?? this.confirmPassword,
       isConfirmPasswordValid:
           isConfirmPasswordValid ?? this.isConfirmPasswordValid,
       isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,

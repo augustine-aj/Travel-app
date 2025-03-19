@@ -33,25 +33,9 @@ class LoginForm extends StatelessWidget {
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   kheight,
-                  buildTextField(
-                    controller: viewModel.emailTextController,
-                    label: 'Email or Username',
-                    fontColor: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  _buildEmailField(viewModel),
                   kheight,
-                  buildTextField(
-                    controller: viewModel.passwordTextController,
-                    label: 'Password',
-                    fontColor: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    suffixIcon: IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.visibility),
-                      color: Colors.black,
-                    ),
-                    obscureText: true,
-                  ),
+                  //_buildPasswordField,
                   kheight,
                   ElevatedButton(
                     onPressed: () {
@@ -71,6 +55,30 @@ class LoginForm extends StatelessWidget {
     );
   }
 }
+
+_buildEmailField(viewModel) {
+  return buildTextField(
+    controller: viewModel.emailTextController,
+    label: 'Email or Username',
+    fontColor: Colors.white,
+    fontWeight: FontWeight.bold,
+  );
+}
+
+// _buildPasswordField() {
+//   return buildTextField(
+//     controller: viewModel.passwordTextController,
+//     label: 'Password',
+//     fontColor: Colors.white,
+//     fontWeight: FontWeight.bold,
+//     suffixIcon: IconButton(
+//       onPressed: () {},
+//       icon: Icon(Icons.visibility),
+//       color: Colors.black,
+//     ),
+//     obscureText: true,
+//   );
+// }
 
 Widget _buildCreateNewAccount(BuildContext context) {
   return Column(
